@@ -1,0 +1,1112 @@
+# ESTRUCTURA COMPLETA BASE DE DATOS
+
+**Generado:** 2025-11-04 07:50:40
+**Base de datos:** databasefinal
+**Host:** databasefinal.c3o8qkm2u0hm.us-east-2.rds.amazonaws.com
+
+---
+
+## TABLAS
+
+1. `categorias`
+2. `chat_conversaciones`
+3. `chat_mensajes`
+4. `chat_web_predefinido`
+5. `detalle_pedidos`
+6. `ia_categorias_respuesta`
+7. `ia_respuestas_automaticas`
+8. `negocios`
+9. `opiniones`
+10. `password_resets`
+11. `pedidos`
+12. `productos`
+13. `recomendaciones`
+14. `roles`
+15. `soporte_conversaciones`
+16. `soporte_mensajes`
+17. `soporte_respuestas_predef`
+18. `soporte_usuarios`
+19. `tracking_eventos`
+20. `tracking_ruta`
+21. `ubicaciones`
+22. `usuarios`
+
+---
+
+## TABLA: `categorias`
+
+### Estructura
+
+```
+                                              Table "public.categorias"
+    Column    |            Type             | Collation | Nullable |                     Default                      
+--------------+-----------------------------+-----------+----------+--------------------------------------------------
+ id_categoria | bigint                      |           | not null | nextval('categorias_id_categoria_seq'::regclass)
+ id_negocio   | bigint                      |           |          | 
+ nombre       | character varying(100)      |           | not null | 
+ descripcion  | text                        |           |          | 
+ created_at   | timestamp without time zone |           | not null | now()
+ updated_at   | timestamp without time zone |           | not null | now()
+Indexes:
+    "categorias_pkey" PRIMARY KEY, btree (id_categoria)
+    "idx_categorias_negocio" btree (id_negocio)
+Foreign-key constraints:
+    "categorias_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE CASCADE
+Referenced by:
+    TABLE "productos" CONSTRAINT "productos_id_categoria_fkey" FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria) ON DELETE SET NULL
+Triggers:
+    categorias_touch BEFORE UPDATE ON categorias FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     11
+
+### Datos (primeros 10)
+
+```
+ id_categoria | id_negocio |     nombre      |             descripcion              |         created_at         |         updated_at         
+--------------+------------+-----------------+--------------------------------------+----------------------------+----------------------------
+            1 |          1 | Pizzas          | Pizzas artesanales en horno de leña  | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            2 |          2 | Makis           | Variedad de makis frescos            | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            3 |          3 | Bebidas         | Cafés especiales y bebidas calientes | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            4 |          4 | Hamburguesas    | Hamburguesas gourmet                 | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            5 |          1 | Pastas          | Pastas frescas y tradicionales       | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            6 |          2 | Nigiri          | Nigiri de pescados frescos           | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            7 |          3 | Postres         | Postres artesanales y tortas         | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            8 |          4 | Acompañamientos | Papas, aros de cebolla y más         | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            9 |          1 | Ensaladas       | Ensaladas frescas y saludables       | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+           10 |          2 | Combos          | Combos especiales de sushi           | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+(10 rows)
+
+```
+
+---
+
+## TABLA: `chat_conversaciones`
+
+### Estructura
+
+```
+                                                  Table "public.chat_conversaciones"
+      Column      |            Type             | Collation | Nullable |                           Default                            
+------------------+-----------------------------+-----------+----------+--------------------------------------------------------------
+ id_conversacion  | bigint                      |           | not null | nextval('chat_conversaciones_id_conversacion_seq'::regclass)
+ id_pedido        | bigint                      |           |          | 
+ id_cliente       | bigint                      |           |          | 
+ id_delivery      | bigint                      |           |          | 
+ id_admin_soporte | bigint                      |           |          | 
+ canal            | character varying(50)       |           |          | 
+ es_chatbot       | boolean                     |           | not null | false
+ activa           | boolean                     |           | not null | true
+ created_at       | timestamp without time zone |           | not null | now()
+ updated_at       | timestamp without time zone |           | not null | now()
+Indexes:
+    "chat_conversaciones_pkey" PRIMARY KEY, btree (id_conversacion)
+    "idx_chatconv_cliente" btree (id_cliente)
+    "idx_chatconv_delivery" btree (id_delivery)
+    "idx_chatconv_pedido" btree (id_pedido)
+Foreign-key constraints:
+    "chat_conversaciones_id_admin_soporte_fkey" FOREIGN KEY (id_admin_soporte) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    "chat_conversaciones_id_cliente_fkey" FOREIGN KEY (id_cliente) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    "chat_conversaciones_id_delivery_fkey" FOREIGN KEY (id_delivery) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    "chat_conversaciones_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE SET NULL
+Referenced by:
+    TABLE "chat_mensajes" CONSTRAINT "chat_mensajes_id_conversacion_fkey" FOREIGN KEY (id_conversacion) REFERENCES chat_conversaciones(id_conversacion) ON DELETE CASCADE
+Triggers:
+    chat_conversaciones_touch BEFORE UPDATE ON chat_conversaciones FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      7
+
+### Datos (primeros 10)
+
+```
+ id_conversacion | id_pedido | id_cliente | id_delivery | id_admin_soporte | canal | es_chatbot | activa |         created_at         |         updated_at         
+-----------------+-----------+------------+-------------+------------------+-------+------------+--------+----------------------------+----------------------------
+               1 |           |          1 |           4 |                  | app   | f          | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               2 |           |          2 |             |                  | bot   | t          | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+   1762142890631 |           |         11 |           4 |                  |       | t          | t      | 2025-11-03 04:08:10.632196 | 2025-11-03 04:22:09.42974
+   1762169255699 |           |         15 |             |                  |       | t          | t      | 2025-11-03 11:27:35.700063 | 2025-11-03 11:27:35.700063
+   1762178014500 |           |          9 |             |                  |       | t          | t      | 2025-11-03 13:53:34.500485 | 2025-11-03 13:53:34.500485
+   1762189425282 |           |         17 |             |                  |       | t          | t      | 2025-11-03 17:03:45.28269  | 2025-11-03 17:03:45.28269
+   1762222797914 |           |          1 |             |                  |       | t          | t      | 2025-11-04 02:19:57.913481 | 2025-11-04 02:19:57.913481
+(7 rows)
+
+```
+
+---
+
+## TABLA: `chat_mensajes`
+
+### Estructura
+
+```
+                                               Table "public.chat_mensajes"
+     Column      |            Type             | Collation | Nullable |                      Default                      
+-----------------+-----------------------------+-----------+----------+---------------------------------------------------
+ id_mensaje      | bigint                      |           | not null | nextval('chat_mensajes_id_mensaje_seq'::regclass)
+ id_conversacion | bigint                      |           | not null | 
+ id_remitente    | bigint                      |           |          | 
+ id_destinatario | bigint                      |           |          | 
+ tipo            | character varying(20)       |           | not null | 'texto'::character varying
+ mensaje         | text                        |           | not null | 
+ created_at      | timestamp without time zone |           | not null | now()
+ updated_at      | timestamp without time zone |           | not null | now()
+Indexes:
+    "chat_mensajes_pkey" PRIMARY KEY, btree (id_mensaje)
+    "idx_chatmsg_conv" btree (id_conversacion, created_at)
+    "idx_chatmsg_conv_created" btree (id_conversacion, created_at)
+Foreign-key constraints:
+    "chat_mensajes_id_conversacion_fkey" FOREIGN KEY (id_conversacion) REFERENCES chat_conversaciones(id_conversacion) ON DELETE CASCADE
+Triggers:
+    chat_mensajes_touch BEFORE UPDATE ON chat_mensajes FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     47
+
+### Datos (primeros 10)
+
+```
+ id_mensaje | id_conversacion | id_remitente | id_destinatario | tipo  |                           mensaje                            |         created_at         |         updated_at         
+------------+-----------------+--------------+-----------------+-------+--------------------------------------------------------------+----------------------------+----------------------------
+          1 |               1 |            1 |               4 | texto | Hola Pablo, ¿cuánto falta para que llegue mi pedido?         | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          2 |               1 |            4 |               1 | texto | Hola Carlos, ya estoy a 5 minutos de tu casa.                | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          3 |               2 |            2 |                 | texto | Bot, ¿qué métodos de pago aceptan?                           | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          4 |               2 |              |                 | bot   | Aceptamos tarjetas, Yape y efectivo. ¿Te ayudo a elegir uno? | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          5 |   1762142890631 |           11 |                 | texto | Hola, quiero hacer un pedido                                 | 2025-11-03 04:08:10.634333 | 2025-11-03 04:08:10.634333
+          6 |   1762142890631 |           13 |              11 | texto | ¡Hola! ¿En qué puedo ayudarte hoy?                           | 2025-11-03 04:08:10.714528 | 2025-11-03 04:08:10.714528
+          7 |               1 |           11 |                 | texto | Hola                                                         | 2025-11-03 04:18:58.97463  | 2025-11-03 04:18:58.97463
+          8 |   1762169255699 |           15 |                 | texto | hola                                                         | 2025-11-03 11:27:35.702174 | 2025-11-03 11:27:35.702174
+          9 |   1762169255699 |           13 |              15 | texto | ¡Hola! ¿En qué puedo ayudarte hoy?                           | 2025-11-03 11:27:35.710739 | 2025-11-03 11:27:35.710739
+         10 |   1762169255699 |           15 |                 | texto | pedido                                                       | 2025-11-03 11:27:43.533965 | 2025-11-03 11:27:43.533965
+(10 rows)
+
+```
+
+---
+
+## TABLA: `chat_web_predefinido`
+
+### Estructura
+
+```
+                                             Table "public.chat_web_predefinido"
+   Column    |            Type             | Collation | Nullable |                          Default                          
+-------------+-----------------------------+-----------+----------+-----------------------------------------------------------
+ id_pregunta | bigint                      |           | not null | nextval('chat_web_predefinido_id_pregunta_seq'::regclass)
+ pregunta    | text                        |           | not null | 
+ respuesta   | text                        |           | not null | 
+ categoria   | character varying(50)       |           |          | 'general'::character varying
+ orden       | integer                     |           |          | 1
+ activo      | boolean                     |           | not null | true
+ created_at  | timestamp without time zone |           | not null | now()
+Indexes:
+    "chat_web_predefinido_pkey" PRIMARY KEY, btree (id_pregunta)
+    "idx_chat_web_categoria" btree (categoria, orden)
+
+```
+
+**Total registros:**      6
+
+### Datos (primeros 10)
+
+```
+ id_pregunta |             pregunta             |                                                                                respuesta                                                                                |   categoria   | orden | activo |         created_at         
+-------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+-------+--------+----------------------------
+           1 | ¿Cómo funciona Unite Speed?      | Unite Speed es una plataforma de delivery que conecta restaurantes, repartidores y clientes. Puedes hacer pedidos desde nuestra app y seguir tu entrega en tiempo real. | general       |     1 | t      | 2025-11-03 01:17:43.629512
+           2 | ¿Cuáles son los métodos de pago? | Aceptamos tarjetas de crédito/débito, transferencias bancarias y pago en efectivo al momento de la entrega.                                                             | pagos         |     2 | t      | 2025-11-03 01:17:43.629512
+           3 | ¿Cuánto tiempo tarda la entrega? | El tiempo promedio de entrega es de 20-30 minutos, dependiendo de la distancia y disponibilidad del restaurante.                                                        | tiempos       |     3 | t      | 2025-11-03 01:17:43.629512
+           4 | ¿Hay costo de envío?             | El costo de envío varía según la distancia. Muchos restaurantes ofrecen envío gratis en pedidos superiores a cierto monto.                                              | costos        |     4 | t      | 2025-11-03 01:17:43.629512
+           5 | ¿Puedo cancelar mi pedido?       | Sí, puedes cancelar tu pedido antes de que el repartidor lo recoja del restaurante. Después de eso, contacta a soporte.                                                 | cancelaciones |     5 | t      | 2025-11-03 01:17:43.629512
+           6 | ¿Cómo me registro?               | Descarga la app Unite Speed desde Google Play o App Store, crea tu cuenta con email y teléfono, y ¡listo para pedir!                                                    | registro      |     6 | t      | 2025-11-03 01:17:43.629512
+(6 rows)
+
+```
+
+---
+
+## TABLA: `detalle_pedidos`
+
+### Estructura
+
+```
+                                               Table "public.detalle_pedidos"
+     Column      |            Type             | Collation | Nullable |                       Default                       
+-----------------+-----------------------------+-----------+----------+-----------------------------------------------------
+ id_detalle      | bigint                      |           | not null | nextval('detalle_pedidos_id_detalle_seq'::regclass)
+ id_pedido       | bigint                      |           | not null | 
+ id_producto     | bigint                      |           | not null | 
+ cantidad        | integer                     |           | not null | 
+ precio_unitario | numeric(12,2)               |           | not null | 
+ subtotal        | numeric(12,2)               |           | not null | 
+ created_at      | timestamp without time zone |           | not null | now()
+ updated_at      | timestamp without time zone |           | not null | now()
+Indexes:
+    "detalle_pedidos_pkey" PRIMARY KEY, btree (id_detalle)
+    "idx_detalle_pedido" btree (id_pedido)
+    "idx_detalle_producto" btree (id_producto)
+Check constraints:
+    "detalle_pedidos_cantidad_check" CHECK (cantidad > 0)
+    "detalle_pedidos_precio_unitario_check" CHECK (precio_unitario >= 0::numeric)
+    "detalle_pedidos_subtotal_check" CHECK (subtotal >= 0::numeric)
+Foreign-key constraints:
+    "detalle_pedidos_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+    "detalle_pedidos_id_producto_fkey" FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE RESTRICT
+Triggers:
+    detalle_pedidos_touch BEFORE UPDATE ON detalle_pedidos FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      1
+
+### Datos (primeros 10)
+
+```
+ id_detalle | id_pedido | id_producto | cantidad | precio_unitario | subtotal |         created_at         |         updated_at         
+------------+-----------+-------------+----------+-----------------+----------+----------------------------+----------------------------
+          1 |         2 |           3 |        3 |           14.00 |    42.00 | 2025-11-03 11:31:08.481853 | 2025-11-03 11:31:08.481853
+(1 row)
+
+```
+
+---
+
+## TABLA: `ia_categorias_respuesta`
+
+### Estructura
+
+```
+                                              Table "public.ia_categorias_respuesta"
+     Column      |         Type          | Collation | Nullable |                             Default                              
+-----------------+-----------------------+-----------+----------+------------------------------------------------------------------
+ id_categoria_ia | integer               |           | not null | nextval('ia_categorias_respuesta_id_categoria_ia_seq'::regclass)
+ nombre          | character varying(80) |           | not null | 
+ descripcion     | text                  |           |          | 
+Indexes:
+    "ia_categorias_respuesta_pkey" PRIMARY KEY, btree (id_categoria_ia)
+    "ia_categorias_respuesta_nombre_key" UNIQUE CONSTRAINT, btree (nombre)
+Referenced by:
+    TABLE "ia_respuestas_automaticas" CONSTRAINT "ia_respuestas_automaticas_id_categoria_ia_fkey" FOREIGN KEY (id_categoria_ia) REFERENCES ia_categorias_respuesta(id_categoria_ia)
+
+```
+
+**Total registros:**     14
+
+### Datos (primeros 10)
+
+```
+ id_categoria_ia |     nombre     |                         descripcion                         
+-----------------+----------------+-------------------------------------------------------------
+               1 | bienvenida     | Saludos iniciales y mensajes de bienvenida
+               2 | estado_pedido  | Consultas sobre el estado actual del pedido
+               3 | tiempo_entrega | Consultas sobre tiempos estimados de entrega
+               4 | pago           | Consultas sobre formas de pago y problemas de transacciones
+               5 | cancelacion    | Información sobre cancelación de pedidos
+               6 | promociones    | Ofertas, descuentos y promociones activas
+               7 | agradecimiento | Mensajes de agradecimiento al cliente
+               8 | error_app      | Respuestas ante errores técnicos de la aplicación
+               9 | despedida      | Mensajes de despedida
+              10 | fuera_tema     | Respuestas cuando la consulta no es reconocida
+(10 rows)
+
+```
+
+---
+
+## TABLA: `ia_respuestas_automaticas`
+
+### Estructura
+
+```
+                                                 Table "public.ia_respuestas_automaticas"
+     Column      |            Type             | Collation | Nullable |                              Default                               
+-----------------+-----------------------------+-----------+----------+--------------------------------------------------------------------
+ id_respuesta_ia | bigint                      |           | not null | nextval('ia_respuestas_automaticas_id_respuesta_ia_seq'::regclass)
+ id_categoria_ia | integer                     |           |          | 
+ canal           | character varying(30)       |           | not null | 'general'::character varying
+ scope_destino   | character varying(30)       |           | not null | 'cliente'::character varying
+ intent          | character varying(80)       |           |          | 
+ keywords        | text[]                      |           |          | 
+ regex_match     | text                        |           |          | 
+ respuesta       | text                        |           | not null | 
+ idioma          | character varying(5)        |           | not null | 'es'::character varying
+ tono            | character varying(30)       |           |          | 'amigable'::character varying
+ prioridad       | smallint                    |           | not null | 3
+ activo          | boolean                     |           | not null | true
+ created_at      | timestamp without time zone |           | not null | now()
+ updated_at      | timestamp without time zone |           | not null | now()
+Indexes:
+    "ia_respuestas_automaticas_pkey" PRIMARY KEY, btree (id_respuesta_ia)
+Foreign-key constraints:
+    "ia_respuestas_automaticas_id_categoria_ia_fkey" FOREIGN KEY (id_categoria_ia) REFERENCES ia_categorias_respuesta(id_categoria_ia)
+
+```
+
+**Total registros:**     72
+
+### Datos (primeros 10)
+
+```
+ id_respuesta_ia | id_categoria_ia |  canal  | scope_destino |      intent       |             keywords             | regex_match |                                  respuesta                                   | idioma |   tono   | prioridad | activo |         created_at         |         updated_at         
+-----------------+-----------------+---------+---------------+-------------------+----------------------------------+-------------+------------------------------------------------------------------------------+--------+----------+-----------+--------+----------------------------+----------------------------
+               1 |               1 | general | cliente       | saludo_inicial    | {hola,buenos,buenas,hey,saludos} |             | ¡Hola! ¿En qué puedo ayudarte hoy?                                           | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               2 |               1 | general | cliente       | saludo_inicial    | {hola,bienvenido}                |             | ¡Bienvenido! Estoy listo para ayudarte con tu pedido.                        | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               3 |               1 | general | cliente       | saludo_inicial    | {hola,"qué tal","cómo estás"}    |             | ¡Qué gusto tenerte aquí! ¿Quieres saber algo sobre tu pedido?                | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               4 |               1 | general | cliente       | saludo_inicial    | {hola,ayuda}                     |             | ¡Hola! ¿Listo para ordenar algo rico?                                        | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               5 |               1 | general | cliente       | saludo_marca      | {hola,unite,speed}               |             | ¡Bienvenido a Unite Speed Delivery! Te ayudo con lo que necesites 🚀         | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               6 |               2 | general | cliente       | pedido_procesando | {estado,pedido,dónde,proceso}    |             | Tu pedido está siendo procesado. Te avisaré cuando salga a reparto.          | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               7 |               2 | general | cliente       | pedido_preparando | {pedido,preparando,listo}        |             | Todavía estamos preparando tu pedido, ¡ya falta poco!                        | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               8 |               2 | general | cliente       | pedido_enviado    | {enviado,camino,salió}           |             | Tu pedido ya fue enviado y está en camino hacia tu dirección.                | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               9 |               2 | general | cliente       | pedido_cerca      | {cerca,llegar,cuando}            |             | Tu pedido ya está cerca de llegar, mantente atento 📦                        | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+              10 |               2 | general | cliente       | pedido_tracking   | {seguir,rastrear,ubicación}      |             | En Unite Speed Delivery seguimos tu pedido en tiempo real. ¡Va en camino! 🚚 | es     | amigable |         1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+(10 rows)
+
+```
+
+---
+
+## TABLA: `negocios`
+
+### Estructura
+
+```
+                                               Table "public.negocios"
+      Column      |            Type             | Collation | Nullable |                   Default                    
+------------------+-----------------------------+-----------+----------+----------------------------------------------
+ id_negocio       | bigint                      |           | not null | nextval('negocios_id_negocio_seq'::regclass)
+ id_usuario       | bigint                      |           |          | 
+ nombre_comercial | character varying(150)      |           | not null | 
+ email            | character varying(160)      |           |          | 
+ ruc              | character varying(13)       |           |          | 
+ direccion        | text                        |           |          | 
+ telefono         | character varying(60)       |           |          | 
+ logo_url         | text                        |           |          | 
+ activo           | boolean                     |           | not null | true
+ created_at       | timestamp without time zone |           | not null | now()
+ updated_at       | timestamp without time zone |           | not null | now()
+Indexes:
+    "negocios_pkey" PRIMARY KEY, btree (id_negocio)
+Foreign-key constraints:
+    "negocios_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+Referenced by:
+    TABLE "categorias" CONSTRAINT "categorias_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE CASCADE
+    TABLE "productos" CONSTRAINT "productos_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE CASCADE
+    TABLE "soporte_conversaciones" CONSTRAINT "soporte_conversaciones_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE SET NULL
+Triggers:
+    negocios_touch BEFORE UPDATE ON negocios FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      5
+
+### Datos (primeros 10)
+
+```
+ id_negocio | id_usuario | nombre_comercial |        email         |      ruc      |     direccion     | telefono |            logo_url            | activo |         created_at         |         updated_at         
+------------+------------+------------------+----------------------+---------------+-------------------+----------+--------------------------------+--------+----------------------------+----------------------------
+          1 |          7 | La Pizzería Lima | pizzeria@example.com | 20111111111   | Av. Primavera 456 | 555-0501 | https://example.com/pizza.png  | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          2 |          8 | Sushi Express    | sushi@example.com    | 20222222222   | Av. Arequipa 890  | 555-0502 | https://example.com/sushi.png  | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          3 |          9 | Café Andino      | cafe@example.com     | 20333333333   | Jr. Colmena 234   | 555-0503 | https://example.com/cafe.png   | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          4 |         10 | Burger Station   | burger@example.com   | 20444444444   | Av. Angamos 765   | 555-0504 | https://example.com/burger.png | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          5 |         11 | Mi Negocio Test  |                      | 1234567890123 | Av. Test 123      |          |                                | t      | 2025-11-03 04:07:18.645574 | 2025-11-03 04:07:18.645574
+(5 rows)
+
+```
+
+---
+
+## TABLA: `opiniones`
+
+### Estructura
+
+```
+                                              Table "public.opiniones"
+    Column     |            Type             | Collation | Nullable |                    Default                    
+---------------+-----------------------------+-----------+----------+-----------------------------------------------
+ id_opinion    | bigint                      |           | not null | nextval('opiniones_id_opinion_seq'::regclass)
+ id_usuario    | bigint                      |           |          | 
+ nombre        | character varying(150)      |           |          | 
+ email         | character varying(160)      |           |          | 
+ rating        | smallint                    |           | not null | 
+ comentario    | text                        |           | not null | 
+ clasificacion | character varying(20)       |           |          | generated always as (                        +
+               |                             |           |          | CASE                                         +
+               |                             |           |          |     WHEN rating <= 2 THEN 'mala'::text       +
+               |                             |           |          |     WHEN rating = 3 THEN 'regular'::text     +
+               |                             |           |          |     WHEN rating = 4 THEN 'buena'::text       +
+               |                             |           |          |     ELSE 'excelente'::text                   +
+               |                             |           |          | END) stored
+ plataforma    | character varying(40)       |           |          | 'web'::character varying
+ estado        | character varying(20)       |           | not null | 'aprobada'::character varying
+ created_at    | timestamp without time zone |           | not null | now()
+ updated_at    | timestamp without time zone |           | not null | now()
+Indexes:
+    "opiniones_pkey" PRIMARY KEY, btree (id_opinion)
+    "idx_opiniones_estado" btree (estado)
+    "idx_opiniones_rating" btree (rating)
+Check constraints:
+    "opiniones_estado_check" CHECK (estado::text = ANY (ARRAY['pendiente'::character varying, 'aprobada'::character varying, 'rechazada'::character varying]::text[]))
+    "opiniones_rating_check" CHECK (rating >= 1 AND rating <= 5)
+Foreign-key constraints:
+    "opiniones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+Triggers:
+    opiniones_touch BEFORE UPDATE ON opiniones FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     11
+
+### Datos (primeros 10)
+
+```
+ id_opinion | id_usuario |     nombre     |          email          | rating |                                     comentario                                      | clasificacion | plataforma |  estado  |         created_at         |         updated_at         
+------------+------------+----------------+-------------------------+--------+-------------------------------------------------------------------------------------+---------------+------------+----------+----------------------------+----------------------------
+          1 |            | María González | maria@example.com       |      5 | Excelente servicio, muy rápido y la comida llegó caliente                           | excelente     | web        | aprobada | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          2 |            | Carlos Pérez   | carlos@example.com      |      4 | Buena experiencia, solo tardó un poco más de lo esperado                            | buena         | web        | aprobada | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          3 |            | Ana López      | ana@example.com         |      5 | Unite Speed es increíble, siempre puntuales                                         | excelente     | web        | aprobada | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          4 |            | José Martín    | jose@example.com        |      3 | Regular, la comida estaba fría pero el repartidor fue amable                        | regular       | web        | aprobada | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          5 |            | Laura Silva    | laura@example.com       |      5 | Perfecto! La mejor app de delivery que he usado                                     | excelente     | web        | aprobada | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          6 |          1 | Carlos Mendoza | carlos.m@example.com    |      5 | Excelente servicio, muy rápido                                                      | excelente     | app        | aprobada | 2025-11-03 06:12:55.294225 | 2025-11-03 06:12:55.294225
+          7 |            | María López    | maria.l@example.com     |      4 | Muy buena experiencia                                                               | buena         | web        | aprobada | 2025-11-03 06:12:55.294225 | 2025-11-03 06:12:55.294225
+          8 |            | Juan Pérez     | juan.p@gmail.com        |      5 | Primera vez que uso la app. Recomendado!                                            | excelente     | web        | aprobada | 2025-11-03 06:12:55.294225 | 2025-11-03 06:12:55.294225
+          9 |         15 | mi             | mi@gmail.com            |      5 | bonito                                                                              | excelente     | app        | aprobada | 2025-11-03 11:30:17.104862 | 2025-11-03 11:30:17.104862
+         10 |            | melo           | yevek98270@burangir.com |      4 | Es mi primera vez usar esta app, y me a gustado y tanto el repartidor llega rapido. | buena         | web        | aprobada | 2025-11-03 20:30:23.270856 | 2025-11-03 20:30:23.270856
+(10 rows)
+
+```
+
+---
+
+## TABLA: `password_resets`
+
+### Estructura
+
+```
+                                        Table "public.password_resets"
+   Column   |            Type             | Collation | Nullable |                   Default                   
+------------+-----------------------------+-----------+----------+---------------------------------------------
+ id         | bigint                      |           | not null | nextval('password_resets_id_seq'::regclass)
+ user_id    | bigint                      |           | not null | 
+ code_hash  | text                        |           | not null | 
+ created_at | timestamp without time zone |           | not null | now()
+ expires_at | timestamp without time zone |           | not null | 
+ used_at    | timestamp without time zone |           |          | 
+ created_by | bigint                      |           |          | 
+Indexes:
+    "password_resets_pkey" PRIMARY KEY, btree (id)
+    "idx_password_resets_user_active" btree (user_id) WHERE used_at IS NULL
+Foreign-key constraints:
+    "password_resets_created_by_fkey" FOREIGN KEY (created_by) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    "password_resets_user_id_fkey" FOREIGN KEY (user_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+
+```
+
+**Total registros:**      4
+
+### Datos (primeros 10)
+
+```
+ id | user_id |                          code_hash                           |         created_at         |         expires_at         | used_at | created_by 
+----+---------+--------------------------------------------------------------+----------------------------+----------------------------+---------+------------
+  1 |       1 | $2a$06$pmd713lcr58TIKdEn5w1z.UIchI1O8wyRn3FoocIihAhtwBWJYOP. | 2025-11-04 01:40:37.874549 | 2025-11-04 01:55:37.874549 |         |           
+  2 |       1 | $2a$06$kber955FeAcpIdC5rZ1CkOJWzwG8fU2OY2zmRN3uAvjs6sawbmFuC | 2025-11-04 01:41:05.014352 | 2025-11-04 01:56:05.014352 |         |           
+  3 |       1 | $2a$06$533ZFWFG1UfQxm6wHVpe/.CkJaXu0XzM/2IQBH8NI6UoDDw2OCND2 | 2025-11-04 02:20:06.414786 | 2025-11-04 02:35:06.414786 |         |           
+  4 |       1 | $2a$06$LUgH671czsFZtYLbAQHeceWbtFGkWwFT6K1rLz5bW33GWbIgwMm86 | 2025-11-04 08:36:48.549534 | 2025-11-04 08:51:48.549534 |         |           
+(4 rows)
+
+```
+
+---
+
+## TABLA: `pedidos`
+
+### Estructura
+
+```
+                                               Table "public.pedidos"
+      Column       |            Type             | Collation | Nullable |                  Default                   
+-------------------+-----------------------------+-----------+----------+--------------------------------------------
+ id_pedido         | bigint                      |           | not null | nextval('pedidos_id_pedido_seq'::regclass)
+ id_cliente        | bigint                      |           | not null | 
+ id_delivery       | bigint                      |           |          | 
+ id_ubicacion      | bigint                      |           |          | 
+ direccion_entrega | text                        |           |          | 
+ metodo_pago       | character varying(30)       |           | not null | 
+ estado            | character varying(30)       |           | not null | 'pendiente'::character varying
+ total             | numeric(12,2)               |           | not null | 0
+ created_at        | timestamp without time zone |           | not null | now()
+ updated_at        | timestamp without time zone |           | not null | now()
+ fecha_entrega     | timestamp without time zone |           |          | 
+Indexes:
+    "pedidos_pkey" PRIMARY KEY, btree (id_pedido)
+    "idx_pedidos_cliente" btree (id_cliente)
+    "idx_pedidos_delivery" btree (id_delivery)
+    "idx_pedidos_estado" btree (estado)
+    "idx_pedidos_estado_created" btree (estado, created_at DESC)
+    "idx_pedidos_ubicacion" btree (id_ubicacion)
+Check constraints:
+    "pedidos_total_check" CHECK (total >= 0::numeric)
+Foreign-key constraints:
+    "pedidos_id_cliente_fkey" FOREIGN KEY (id_cliente) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT
+    "pedidos_id_delivery_fkey" FOREIGN KEY (id_delivery) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    "pedidos_id_ubicacion_fkey" FOREIGN KEY (id_ubicacion) REFERENCES ubicaciones(id_ubicacion) ON DELETE SET NULL
+Referenced by:
+    TABLE "chat_conversaciones" CONSTRAINT "chat_conversaciones_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE SET NULL
+    TABLE "detalle_pedidos" CONSTRAINT "detalle_pedidos_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+    TABLE "tracking_eventos" CONSTRAINT "tracking_eventos_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+    TABLE "tracking_ruta" CONSTRAINT "tracking_ruta_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+Triggers:
+    pedidos_touch BEFORE UPDATE ON pedidos FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      2
+
+### Datos (primeros 10)
+
+```
+ id_pedido | id_cliente | id_delivery | id_ubicacion |       direccion_entrega        |  metodo_pago  |  estado   | total |         created_at         |         updated_at         | fecha_entrega 
+-----------+------------+-------------+--------------+--------------------------------+---------------+-----------+-------+----------------------------+----------------------------+---------------
+         1 |          1 |           4 |            1 | Av. Lima 123                   | efectivo      | en_camino | 42.00 | 2025-11-03 01:17:43.629512 | 2025-11-03 04:22:34.070148 | 
+         2 |         15 |          16 |            7 | Lat: 0.950789, Lon: -79.650305 | transferencia | pendiente | 44.00 | 2025-11-03 11:31:08.481853 | 2025-11-03 12:28:15.158527 | 
+(2 rows)
+
+```
+
+---
+
+## TABLA: `productos`
+
+### Estructura
+
+```
+                                              Table "public.productos"
+    Column    |            Type             | Collation | Nullable |                    Default                     
+--------------+-----------------------------+-----------+----------+------------------------------------------------
+ id_producto  | bigint                      |           | not null | nextval('productos_id_producto_seq'::regclass)
+ id_negocio   | bigint                      |           | not null | 
+ id_categoria | bigint                      |           |          | 
+ nombre       | character varying(160)      |           | not null | 
+ descripcion  | text                        |           |          | 
+ precio       | numeric(12,2)               |           | not null | 
+ disponible   | boolean                     |           | not null | true
+ stock        | integer                     |           | not null | 0
+ imagen_url   | text                        |           |          | 
+ created_at   | timestamp without time zone |           | not null | now()
+ updated_at   | timestamp without time zone |           | not null | now()
+Indexes:
+    "productos_pkey" PRIMARY KEY, btree (id_producto)
+    "idx_productos_categoria" btree (id_categoria)
+    "idx_productos_negocio" btree (id_negocio)
+Check constraints:
+    "productos_precio_check" CHECK (precio >= 0::numeric)
+Foreign-key constraints:
+    "productos_id_categoria_fkey" FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria) ON DELETE SET NULL
+    "productos_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE CASCADE
+Referenced by:
+    TABLE "detalle_pedidos" CONSTRAINT "detalle_pedidos_id_producto_fkey" FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE RESTRICT
+    TABLE "recomendaciones" CONSTRAINT "recomendaciones_id_producto_fkey" FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE CASCADE
+Triggers:
+    productos_touch BEFORE UPDATE ON productos FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     66
+
+### Datos (primeros 10)
+
+```
+ id_producto | id_negocio | id_categoria |         nombre         |             descripcion             | precio | disponible | stock |      imagen_url      |         created_at         |         updated_at         
+-------------+------------+--------------+------------------------+-------------------------------------+--------+------------+-------+----------------------+----------------------------+----------------------------
+           5 |          1 |            1 | Big Mac                | Hamburguesa icónica con doble carne |   5.99 | t          |   100 | bigmac.jpg           | 2025-11-03 20:29:10.799362 | 2025-11-03 20:29:10.799362
+           6 |          1 |            1 | McNuggets 10 piezas    | Nuggets de pollo crujientes         |   4.99 | t          |   150 | nuggets.jpg          | 2025-11-03 20:29:10.799362 | 2025-11-03 20:29:10.799362
+           7 |          1 |            4 | McFlurry Oreo          | Helado con trozos de Oreo           |   3.49 | t          |    80 | mcflurry-oreo.jpg    | 2025-11-03 20:29:10.799362 | 2025-11-03 20:29:10.799362
+           8 |          1 |            3 | Papas Grandes          | Papas fritas crujientes             |   2.99 | t          |   200 | papas-grandes.jpg    | 2025-11-03 20:29:10.799362 | 2025-11-03 20:29:10.799362
+           9 |          2 |            1 | Bucket 8 Piezas        | Pollo frito original 8 piezas       |  15.99 | t          |    50 | bucket-8.jpg         | 2025-11-03 20:29:10.809359 | 2025-11-03 20:29:10.809359
+          10 |          2 |            1 | Kentucky Burger        | Hamburguesa de pollo crispy         |   6.49 | t          |    75 | kentucky-burger.jpg  | 2025-11-03 20:29:10.809359 | 2025-11-03 20:29:10.809359
+          11 |          2 |            5 | Coleslaw               | Ensalada de col fresca              |   2.49 | t          |   100 | coleslaw.jpg         | 2025-11-03 20:29:10.809359 | 2025-11-03 20:29:10.809359
+          12 |          3 |            1 | Whopper Doble          | Doble carne a la parrilla           |   7.99 | t          |    60 | whopper-doble.jpg    | 2025-11-03 20:29:10.81388  | 2025-11-03 20:29:10.81388
+          13 |          3 |            3 | Aros de Cebolla        | Aros de cebolla crujientes          |   3.49 | t          |    90 | aros-cebolla.jpg     | 2025-11-03 20:29:10.81388  | 2025-11-03 20:29:10.81388
+          14 |          4 |            2 | Pizza Suprema Familiar | Pizza con todos los ingredientes    |  18.99 | t          |    40 | suprema-familiar.jpg | 2025-11-03 20:29:10.816215 | 2025-11-03 20:29:10.816215
+(10 rows)
+
+```
+
+---
+
+## TABLA: `recomendaciones`
+
+### Estructura
+
+```
+                                                  Table "public.recomendaciones"
+      Column      |            Type             | Collation | Nullable |                          Default                          
+------------------+-----------------------------+-----------+----------+-----------------------------------------------------------
+ id_recomendacion | bigint                      |           | not null | nextval('recomendaciones_id_recomendacion_seq'::regclass)
+ id_producto      | bigint                      |           | not null | 
+ id_usuario       | bigint                      |           | not null | 
+ puntuacion       | integer                     |           | not null | 
+ comentario       | text                        |           |          | 
+ created_at       | timestamp without time zone |           | not null | now()
+Indexes:
+    "recomendaciones_pkey" PRIMARY KEY, btree (id_recomendacion)
+    "recomendaciones_id_producto_id_usuario_key" UNIQUE CONSTRAINT, btree (id_producto, id_usuario)
+Check constraints:
+    "recomendaciones_puntuacion_check" CHECK (puntuacion >= 1 AND puntuacion <= 5)
+Foreign-key constraints:
+    "recomendaciones_id_producto_fkey" FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE CASCADE
+    "recomendaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+
+```
+
+**Total registros:**      3
+
+### Datos (primeros 10)
+
+```
+ id_recomendacion | id_producto | id_usuario | puntuacion |                comentario                |         created_at         
+------------------+-------------+------------+------------+------------------------------------------+----------------------------
+                1 |           1 |          1 |          5 | Sabor auténtico, llegará caliente.       | 2025-11-03 01:17:43.629512
+                2 |           2 |          2 |          4 | Muy fresco, aunque llegó con poca salsa. | 2025-11-03 01:17:43.629512
+                3 |           1 |         11 |          5 | Excelente producto                       | 2025-11-03 04:08:40.126105
+(3 rows)
+
+```
+
+---
+
+## TABLA: `roles`
+
+### Estructura
+
+```
+                                          Table "public.roles"
+   Column   |            Type             | Collation | Nullable |                Default                
+------------+-----------------------------+-----------+----------+---------------------------------------
+ id_rol     | integer                     |           | not null | nextval('roles_id_rol_seq'::regclass)
+ nombre     | character varying(50)       |           | not null | 
+ created_at | timestamp without time zone |           | not null | now()
+Indexes:
+    "roles_pkey" PRIMARY KEY, btree (id_rol)
+    "roles_nombre_key" UNIQUE CONSTRAINT, btree (nombre)
+Referenced by:
+    TABLE "usuarios" CONSTRAINT "usuarios_id_rol_fkey" FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+
+```
+
+**Total registros:**      5
+
+### Datos (primeros 10)
+
+```
+ id_rol |  nombre  |         created_at         
+--------+----------+----------------------------
+      1 | cliente  | 2025-11-03 01:17:43.629512
+      2 | delivery | 2025-11-03 01:17:43.629512
+      3 | negocio  | 2025-11-03 01:17:43.629512
+      4 | admin    | 2025-11-03 01:17:43.629512
+      5 | soporte  | 2025-11-03 01:17:43.629512
+(5 rows)
+
+```
+
+---
+
+## TABLA: `soporte_conversaciones`
+
+### Estructura
+
+```
+                                                  Table "public.soporte_conversaciones"
+      Column       |            Type             | Collation | Nullable |                             Default                             
+-------------------+-----------------------------+-----------+----------+-----------------------------------------------------------------
+ id_soporte_conv   | bigint                      |           | not null | nextval('soporte_conversaciones_id_soporte_conv_seq'::regclass)
+ id_usuario        | bigint                      |           |          | 
+ id_negocio        | bigint                      |           |          | 
+ estado            | character varying(20)       |           | not null | 'abierta'::character varying
+ id_agente_soporte | bigint                      |           |          | 
+ canal             | character varying(50)       |           |          | 'app'::character varying
+ prioridad         | smallint                    |           | not null | 3
+ permite_ia        | boolean                     |           | not null | false
+ created_at        | timestamp without time zone |           | not null | now()
+ updated_at        | timestamp without time zone |           | not null | now()
+Indexes:
+    "soporte_conversaciones_pkey" PRIMARY KEY, btree (id_soporte_conv)
+    "idx_soporte_usuario" btree (id_usuario)
+Check constraints:
+    "soporte_conversaciones_prioridad_check" CHECK (prioridad >= 1 AND prioridad <= 5)
+Foreign-key constraints:
+    "soporte_conversaciones_id_negocio_fkey" FOREIGN KEY (id_negocio) REFERENCES negocios(id_negocio) ON DELETE SET NULL
+    "soporte_conversaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+Referenced by:
+    TABLE "soporte_mensajes" CONSTRAINT "soporte_mensajes_id_soporte_conv_fkey" FOREIGN KEY (id_soporte_conv) REFERENCES soporte_conversaciones(id_soporte_conv) ON DELETE CASCADE
+Triggers:
+    soporte_conv_touch BEFORE UPDATE ON soporte_conversaciones FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      5
+
+### Datos (primeros 10)
+
+```
+ id_soporte_conv | id_usuario | id_negocio |  estado  | id_agente_soporte | canal | prioridad | permite_ia |         created_at         |         updated_at         
+-----------------+------------+------------+----------+-------------------+-------+-----------+------------+----------------------------+----------------------------
+               1 |          1 |            | asignada |                   | app   |         2 | t          | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+               2 |         11 |            | abierta  |                   | app   |         3 | f          | 2025-11-03 04:08:22.094432 | 2025-11-03 04:08:22.094432
+               3 |         18 |            | abierta  |                   | app   |         3 | f          | 2025-11-03 17:47:32.05505  | 2025-11-03 17:47:32.05505
+               4 |         15 |            | abierta  |                   | app   |         3 | f          | 2025-11-03 17:48:09.375615 | 2025-11-03 17:48:09.375615
+               5 |         19 |            | abierta  |                   | app   |         3 | f          | 2025-11-03 18:30:20.679467 | 2025-11-03 18:30:20.679467
+(5 rows)
+
+```
+
+---
+
+## TABLA: `soporte_mensajes`
+
+### Estructura
+
+```
+                                               Table "public.soporte_mensajes"
+     Column      |            Type             | Collation | Nullable |                       Default                        
+-----------------+-----------------------------+-----------+----------+------------------------------------------------------
+ id_sop_msj      | bigint                      |           | not null | nextval('soporte_mensajes_id_sop_msj_seq'::regclass)
+ id_soporte_conv | bigint                      |           | not null | 
+ id_remitente    | bigint                      |           |          | 
+ es_agente       | boolean                     |           | not null | false
+ tipo            | character varying(20)       |           | not null | 'texto'::character varying
+ mensaje         | text                        |           | not null | 
+ created_at      | timestamp without time zone |           | not null | now()
+Indexes:
+    "soporte_mensajes_pkey" PRIMARY KEY, btree (id_sop_msj)
+    "idx_sopmsg_conv" btree (id_soporte_conv, created_at)
+Foreign-key constraints:
+    "soporte_mensajes_id_soporte_conv_fkey" FOREIGN KEY (id_soporte_conv) REFERENCES soporte_conversaciones(id_soporte_conv) ON DELETE CASCADE
+
+```
+
+**Total registros:**     47
+
+### Datos (primeros 10)
+
+```
+ id_sop_msj | id_soporte_conv | id_remitente | es_agente | tipo  |                                                               mensaje                                                                |         created_at         
+------------+-----------------+--------------+-----------+-------+--------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+          1 |               1 |            1 | f         | texto | Hola soporte, mi comprobante no se descarga.                                                                                         | 2025-11-03 01:17:43.629512
+          2 |               1 |              | t         | texto | Hola Carlos, revisa la sección Historial > Pedidos > Ver comprobante. Avísame si necesitas otra copia.                               | 2025-11-03 01:17:43.629512
+          3 |               2 |           11 | f         | texto | Necesito ayuda con mi pedido                                                                                                         | 2025-11-03 04:08:31.340416
+          4 |               2 |           11 | f         | texto | Necesito ayuda con mi pedido                                                                                                         | 2025-11-03 04:15:36.607542
+          5 |               2 |           14 | t         | texto | ¡Hola! ¿Listo para ordenar algo rico?                                                                                                | 2025-11-03 04:15:36.633448
+          6 |               3 |           18 | f         | texto | Necesito ayuda con mi pedido                                                                                                         | 2025-11-03 17:47:32.058342
+          7 |               3 |           14 | t         | texto | Gracias por contactarnos. Tu consulta ha sido registrada y un técnico de soporte te atenderá pronto. Te responderemos a la brevedad. | 2025-11-03 17:47:32.068462
+          8 |               4 |           15 | f         | texto | Hola                                                                                                                                 | 2025-11-03 17:48:09.377237
+          9 |               4 |           14 | t         | texto | Gracias por contactarnos. Tu consulta ha sido registrada y un técnico de soporte te atenderá pronto. Te responderemos a la brevedad. | 2025-11-03 17:48:09.381656
+         10 |               4 |           15 | f         | texto | hola                                                                                                                                 | 2025-11-03 17:48:22.20383
+(10 rows)
+
+```
+
+---
+
+## TABLA: `soporte_respuestas_predef`
+
+### Estructura
+
+```
+                                               Table "public.soporte_respuestas_predef"
+    Column     |            Type             | Collation | Nullable |                             Default                             
+---------------+-----------------------------+-----------+----------+-----------------------------------------------------------------
+ id_respuesta  | bigint                      |           | not null | nextval('soporte_respuestas_predef_id_respuesta_seq'::regclass)
+ categoria     | character varying(60)       |           | not null | 
+ pregunta      | text                        |           | not null | 
+ respuesta     | text                        |           | not null | 
+ solo_cliente  | boolean                     |           | not null | false
+ solo_delivery | boolean                     |           | not null | false
+ prioridad     | integer                     |           | not null | 100
+ activo        | boolean                     |           | not null | true
+ created_at    | timestamp without time zone |           | not null | now()
+Indexes:
+    "soporte_respuestas_predef_pkey" PRIMARY KEY, btree (id_respuesta)
+
+```
+
+**Total registros:**     82
+
+### Datos (primeros 10)
+
+```
+ id_respuesta | categoria |                                  pregunta                                  |                                                                                                  respuesta                                                                                                   | solo_cliente | solo_delivery | prioridad | activo |         created_at         
+--------------+-----------+----------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+---------------+-----------+--------+----------------------------
+            1 | pagos     | ¿Dónde consulto mi comprobante?                                            | Puedes revisar tus comprobantes desde la sección Historial > Pedidos > Ver comprobante.                                                                                                                      | f            | f             |        10 | t      | 2025-11-03 01:17:43.629512
+            2 | delivery  | No encuentro la dirección del cliente                                      | Comunícate con el cliente desde el chat y verifica la referencia adicional en la ficha del pedido.                                                                                                           | f            | t             |        15 | t      | 2025-11-03 01:17:43.629512
+            3 | cuenta    | Quiero cambiar mi correo registrado                                        | Por seguridad, nuestro equipo de soporte debe ayudarte. Envíanos el nuevo correo y lo actualizaremos.                                                                                                        | t            | f             |        20 | t      | 2025-11-03 01:17:43.629512
+            4 | soporte   | ¿dónde está mi pedido?|rastrear pedido|seguimiento pedido|ubicación pedido | Puedes rastrear tu pedido en tiempo real desde la app. Ve a "Mis Pedidos" → selecciona tu orden → "Ver en mapa". Si no aparece el repartidor, es porque aún no ha sido asignado.                             | t            | f             |         1 | t      | 2025-11-03 18:16:40.707664
+            5 | soporte   | ¿cuánto tarda|tiempo de entrega|cuándo llega mi pedido                     | El tiempo estimado de entrega es de 30-45 minutos en horarios normales. Si tu pedido supera este tiempo, por favor envíanos el número de pedido para verificar el estado.                                    | t            | f             |         1 | t      | 2025-11-03 18:16:40.707664
+            6 | soporte   | cancelar pedido|quiero cancelar|eliminar pedido                            | Los pedidos solo pueden cancelarse si están en estado "Pendiente" (antes de ser asignados). Ve a "Mis Pedidos" → selecciona el pedido → "Cancelar". Si ya fue asignado, contacta directamente al repartidor. | t            | f             |         1 | t      | 2025-11-03 18:16:40.707664
+            7 | soporte   | modificar pedido|cambiar pedido|agregar producto                           | No es posible modificar un pedido una vez confirmado. Si necesitas agregar productos, deberás hacer un nuevo pedido. Si quieres cancelar el actual, hazlo desde "Mis Pedidos" antes de que sea asignado.     | t            | f             |         1 | t      | 2025-11-03 18:16:40.707664
+            8 | soporte   | no llegó mi pedido|pedido perdido|no recibí                                | Lamentamos el inconveniente. Por favor envíanos: 1) Número de pedido, 2) Hora aproximada de la orden, 3) Dirección de entrega. Un técnico revisará tu caso en las próximas 2 horas.                          | t            | f             |         2 | t      | 2025-11-03 18:16:40.707664
+            9 | soporte   | producto equivocado|producto incorrecto|me enviaron otra cosa              | Disculpa por el error. Envíanos: 1) Número de pedido, 2) Foto del producto recibido, 3) Descripción del producto que pediste. Te contactaremos para resolver el problema.                                    | t            | f             |         2 | t      | 2025-11-03 18:16:40.707664
+           10 | soporte   | pedido duplicado|me cobraron dos veces|pedido doble                        | Si ves dos cargos por el mismo pedido, puede ser: 1) Autorización temporal del banco (se libera en 24-48h), 2) Error del sistema. Envíanos capturas de ambos cargos con el número de pedido para verificar.  | t            | f             |         2 | t      | 2025-11-03 18:16:40.707664
+(10 rows)
+
+```
+
+---
+
+## TABLA: `soporte_usuarios`
+
+### Estructura
+
+```
+                                               Table "public.soporte_usuarios"
+     Column      |            Type             | Collation | Nullable |                       Default                        
+-----------------+-----------------------------+-----------+----------+------------------------------------------------------
+ id_soporte      | bigint                      |           | not null | nextval('soporte_usuarios_id_soporte_seq'::regclass)
+ nombre          | character varying(120)      |           | not null | 
+ correo          | character varying(160)      |           | not null | 
+ contrasena_hash | text                        |           | not null | 
+ activo          | boolean                     |           | not null | true
+ fecha_registro  | timestamp without time zone |           | not null | now()
+Indexes:
+    "soporte_usuarios_pkey" PRIMARY KEY, btree (id_soporte)
+    "soporte_usuarios_correo_key" UNIQUE CONSTRAINT, btree (correo)
+
+```
+
+**Total registros:**      2
+
+### Datos (primeros 10)
+
+```
+ id_soporte |     nombre     |           correo           |                       contrasena_hash                        | activo |       fecha_registro       
+------------+----------------+----------------------------+--------------------------------------------------------------+--------+----------------------------
+          1 | Sofía Soporte  | sofia.soporte@example.com  | $2a$10$XOQ0Qd07dU.KQQdvoiOrrOP8Lym5cWInFMtkM25r47z0fUx.3tEmi | t      | 2025-11-03 01:17:43.629512
+          2 | Miguel Soporte | miguel.soporte@example.com | $2a$10$mVLkUJQTbWLRn0AloTX4FujCnNr0dJEZH24GYe9AA9lZt4dgPq/5C | t      | 2025-11-03 01:17:43.629512
+(2 rows)
+
+```
+
+---
+
+## TABLA: `tracking_eventos`
+
+### Estructura
+
+```
+                       Table "public.tracking_eventos"
+    Column    |            Type             | Collation | Nullable | Default 
+--------------+-----------------------------+-----------+----------+---------
+ id_pedido    | bigint                      |           | not null | 
+ orden        | integer                     |           | not null | 
+ latitud      | double precision            |           | not null | 
+ longitud     | double precision            |           | not null | 
+ descripcion  | text                        |           |          | 
+ fecha_evento | timestamp without time zone |           | not null | now()
+Indexes:
+    "tracking_eventos_pkey" PRIMARY KEY, btree (id_pedido, orden)
+    "idx_tracking_eventos_pedido" btree (id_pedido, orden)
+Foreign-key constraints:
+    "tracking_eventos_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+
+```
+
+**Total registros:**      6
+
+### Datos (primeros 10)
+
+```
+ id_pedido | orden | latitud | longitud |            descripcion             |        fecha_evento        
+-----------+-------+---------+----------+------------------------------------+----------------------------
+         1 |     1 |  0.9593 | -79.6527 | Pedido confirmado - Restaurante    | 2025-11-03 01:17:43.629512
+         1 |     2 |   0.958 |  -79.652 | Preparando pedido                  | 2025-11-03 01:17:43.629512
+         1 |     3 |   0.957 |  -79.651 | Pedido listo - Repartidor asignado | 2025-11-03 01:17:43.629512
+         1 |     4 |   0.956 |   -79.65 | En camino al cliente               | 2025-11-03 01:17:43.629512
+         1 |     5 |   0.955 |  -79.649 | Cerca del destino                  | 2025-11-03 01:17:43.629512
+         1 |     6 |   0.954 |  -79.648 | Pedido entregado                   | 2025-11-03 01:17:43.629512
+(6 rows)
+
+```
+
+---
+
+## TABLA: `tracking_ruta`
+
+### Estructura
+
+```
+                                              Table "public.tracking_ruta"
+    Column     |            Type             | Collation | Nullable |                      Default                       
+---------------+-----------------------------+-----------+----------+----------------------------------------------------
+ id_tracking   | bigint                      |           | not null | nextval('tracking_ruta_id_tracking_seq'::regclass)
+ id_pedido     | bigint                      |           | not null | 
+ latitud       | double precision            |           | not null | 
+ longitud      | double precision            |           | not null | 
+ registrado_en | timestamp without time zone |           | not null | now()
+ created_at    | timestamp without time zone |           | not null | now()
+ updated_at    | timestamp without time zone |           | not null | now()
+Indexes:
+    "tracking_ruta_pkey" PRIMARY KEY, btree (id_tracking)
+    "idx_tracking_pedido" btree (id_pedido, registrado_en DESC)
+Foreign-key constraints:
+    "tracking_ruta_id_pedido_fkey" FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE
+Triggers:
+    tracking_touch BEFORE UPDATE ON tracking_ruta FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**      0
+
+---
+
+## TABLA: `ubicaciones`
+
+### Estructura
+
+```
+                                              Table "public.ubicaciones"
+    Column    |            Type             | Collation | Nullable |                      Default                      
+--------------+-----------------------------+-----------+----------+---------------------------------------------------
+ id_ubicacion | bigint                      |           | not null | nextval('ubicaciones_id_ubicacion_seq'::regclass)
+ id_usuario   | bigint                      |           |          | 
+ latitud      | double precision            |           | not null | 
+ longitud     | double precision            |           | not null | 
+ direccion    | text                        |           | not null | 
+ descripcion  | text                        |           |          | 
+ activa       | boolean                     |           | not null | true
+ created_at   | timestamp without time zone |           | not null | now()
+ updated_at   | timestamp without time zone |           | not null | now()
+Indexes:
+    "ubicaciones_pkey" PRIMARY KEY, btree (id_ubicacion)
+    "idx_ubicaciones_usuario" btree (id_usuario)
+Check constraints:
+    "ubicaciones_latitud_check" CHECK (latitud >= '-90'::integer::double precision AND latitud <= 90::double precision)
+    "ubicaciones_longitud_check" CHECK (longitud >= '-180'::integer::double precision AND longitud <= 180::double precision)
+Foreign-key constraints:
+    "ubicaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+Referenced by:
+    TABLE "pedidos" CONSTRAINT "pedidos_id_ubicacion_fkey" FOREIGN KEY (id_ubicacion) REFERENCES ubicaciones(id_ubicacion) ON DELETE SET NULL
+Triggers:
+    ubicaciones_touch BEFORE UPDATE ON ubicaciones FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     10
+
+### Datos (primeros 10)
+
+```
+ id_ubicacion | id_usuario |  latitud  |  longitud   |           direccion            |      descripcion       | activa |         created_at         |         updated_at         
+--------------+------------+-----------+-------------+--------------------------------+------------------------+--------+----------------------------+----------------------------
+            1 |          1 |  -12.0464 |    -77.0428 | Av. Lima 123                   | Casa - Carlos          | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            2 |          2 |    -12.06 |      -77.03 | Jr. Cusco 456                  | Departamento - Diana   | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            3 |          4 |   -12.055 |      -77.02 | Base Delivery 1                | Punto de partida Pablo | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            4 |          5 |    -12.05 |      -77.01 | Base Delivery 2                | Punto de partida Laura | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            5 |          6 |   -12.045 |         -77 | Base Delivery 3                | Punto de partida Marco | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+            6 |         11 |     0.988 |     -79.659 | Test Address                   | Casa                   | t      | 2025-11-03 04:06:50.978121 | 2025-11-03 04:06:50.978121
+            7 |         15 | 0.9507891 | -79.6503053 | Lat: 0.950789, Lon: -79.650305 | Ubicación              | t      | 2025-11-03 11:30:48.676449 | 2025-11-03 11:30:48.676449
+           10 |          1 |  0.988033 |  -79.659094 | Calle Test #456                | Test                   | t      | 2025-11-04 01:41:09.764072 | 2025-11-04 01:41:09.764072
+           12 |          1 |  0.988033 |  -79.659094 | Calle Test #456                | Test                   | t      | 2025-11-04 02:20:10.45937  | 2025-11-04 02:20:10.45937
+           14 |          1 |  0.988033 |  -79.659094 | Calle Test #456                | Test                   | t      | 2025-11-04 08:36:54.248606 | 2025-11-04 08:36:54.248606
+(10 rows)
+
+```
+
+---
+
+## TABLA: `usuarios`
+
+### Estructura
+
+```
+                                            Table "public.usuarios"
+   Column   |            Type             | Collation | Nullable |                   Default                    
+------------+-----------------------------+-----------+----------+----------------------------------------------
+ id_usuario | bigint                      |           | not null | nextval('usuarios_id_usuario_seq'::regclass)
+ nombre     | character varying(120)      |           | not null | 
+ correo     | character varying(160)      |           | not null | 
+ contrasena | text                        |           | not null | 
+ telefono   | character varying(60)       |           |          | 
+ id_rol     | integer                     |           | not null | 
+ activo     | boolean                     |           | not null | true
+ created_at | timestamp without time zone |           | not null | now()
+ updated_at | timestamp without time zone |           | not null | now()
+Indexes:
+    "usuarios_pkey" PRIMARY KEY, btree (id_usuario)
+    "idx_usuarios_lower_correo" btree (lower(correo::text))
+    "usuarios_correo_key" UNIQUE CONSTRAINT, btree (correo)
+Foreign-key constraints:
+    "usuarios_id_rol_fkey" FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+Referenced by:
+    TABLE "chat_conversaciones" CONSTRAINT "chat_conversaciones_id_admin_soporte_fkey" FOREIGN KEY (id_admin_soporte) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "chat_conversaciones" CONSTRAINT "chat_conversaciones_id_cliente_fkey" FOREIGN KEY (id_cliente) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    TABLE "chat_conversaciones" CONSTRAINT "chat_conversaciones_id_delivery_fkey" FOREIGN KEY (id_delivery) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "negocios" CONSTRAINT "negocios_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "opiniones" CONSTRAINT "opiniones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "password_resets" CONSTRAINT "password_resets_created_by_fkey" FOREIGN KEY (created_by) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "password_resets" CONSTRAINT "password_resets_user_id_fkey" FOREIGN KEY (user_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    TABLE "pedidos" CONSTRAINT "pedidos_id_cliente_fkey" FOREIGN KEY (id_cliente) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT
+    TABLE "pedidos" CONSTRAINT "pedidos_id_delivery_fkey" FOREIGN KEY (id_delivery) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    TABLE "recomendaciones" CONSTRAINT "recomendaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    TABLE "soporte_conversaciones" CONSTRAINT "soporte_conversaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    TABLE "ubicaciones" CONSTRAINT "ubicaciones_id_usuario_fkey" FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+Triggers:
+    usuarios_hash_before_insert BEFORE INSERT ON usuarios FOR EACH ROW EXECUTE FUNCTION trg_hash_password()
+    usuarios_hash_before_update BEFORE UPDATE OF contrasena ON usuarios FOR EACH ROW WHEN (new.contrasena IS DISTINCT FROM old.contrasena) EXECUTE FUNCTION trg_hash_password()
+    usuarios_touch_updated BEFORE UPDATE ON usuarios FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+
+```
+
+**Total registros:**     19
+
+### Datos (primeros 10)
+
+```
+ id_usuario |     nombre      |           correo            |                          contrasena                          | telefono | id_rol | activo |         created_at         |         updated_at         
+------------+-----------------+-----------------------------+--------------------------------------------------------------+----------+--------+--------+----------------------------+----------------------------
+          1 | Carlos Cliente  | carlos.cliente@example.com  | $2a$10$6K3tC5OLKus/G6JZ7NJcRu6yWWCV6JA8SB6CeRIzm.TjfZpLfrVZa | 555-0101 |      1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          2 | Diana Cliente   | diana.cliente@example.com   | $2a$10$DKXk1eQ3lWggSkJbk9s6Tet0UunsWOiyo5uGFEFmtN.vmP64AQtbq | 555-0102 |      1 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          3 | Ana Admin       | ana.admin@example.com       | $2a$10$5eT9X42oKVRM7vgeChQv7eu0nnmEqKwUsQqiCNcD9MB7UA0BeanTC | 555-0201 |      4 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          4 | Pablo Delivery  | pablo.delivery@example.com  | $2a$10$jcWdb8ZhiohC90cCo1V3IeVUqeOmQh/1WQugSzMR00BDog2XgDpCW | 555-0301 |      2 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          5 | Laura Delivery  | laura.delivery@example.com  | $2a$10$Qpb6OYTJJfa93OZ9kiMupO1tXY6YPCYJ/kNooPi2SmLoF85hhSjOu | 555-0302 |      2 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          6 | Marco Delivery  | marco.delivery@example.com  | $2a$10$Qk4pgLBJl.qR2jgUgC//AewjbWSm7g4OtPSA3UnF5m0jd51BsaoUa | 555-0303 |      2 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          7 | Nelson Negocio  | nelson.negocio@example.com  | $2a$10$1TptE9IxIWZbKU7UjkpkJOLHa9zzIh9h1TApUxeNwU453xWKp0M8i | 555-0401 |      3 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          8 | Beatriz Negocio | beatriz.negocio@example.com | $2a$10$tJie5vVmdWgVmBlzceGt7./hI9z8DpzvgVIGFBB2ODS2xLHuTJPLG | 555-0402 |      3 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+          9 | Rocio Negocio   | rocio.negocio@example.com   | $2a$10$FYLGMkYMypDkNrPuKPBZueO0qWRZ5tCMDVxVcShLMfJjgc3JwrMli | 555-0403 |      3 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+         10 | Victor Negocio  | victor.negocio@example.com  | $2a$10$sq9o2a5nJ0ewqgpSmYuy4elIOqeTdX97t5ez.a8KupDAGU1fgFV/K | 555-0404 |      3 | t      | 2025-11-03 01:17:43.629512 | 2025-11-03 01:17:43.629512
+(10 rows)
+
+```
+
+---
+
+## RESUMEN
+
+- **categorias:**     11 registros
+- **chat_conversaciones:**      7 registros
+- **chat_mensajes:**     47 registros
+- **chat_web_predefinido:**      6 registros
+- **detalle_pedidos:**      1 registros
+- **ia_categorias_respuesta:**     14 registros
+- **ia_respuestas_automaticas:**     72 registros
+- **negocios:**      5 registros
+- **opiniones:**     11 registros
+- **password_resets:**      4 registros
+- **pedidos:**      2 registros
+- **productos:**     66 registros
+- **recomendaciones:**      3 registros
+- **roles:**      5 registros
+- **soporte_conversaciones:**      5 registros
+- **soporte_mensajes:**     47 registros
+- **soporte_respuestas_predef:**     82 registros
+- **soporte_usuarios:**      2 registros
+- **tracking_eventos:**      6 registros
+- **tracking_ruta:**      0 registros
+- **ubicaciones:**     10 registros
+- **usuarios:**     19 registros
+
+---
+
+*Generado automaticamente el 2025-11-04 07:50:46*

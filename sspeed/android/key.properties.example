@@ -1,0 +1,4 @@
+storePassword=TU_CONTRASEÑA_KEYSTORE
+keyPassword=TU_CONTRASEÑA_KEY
+keyAlias=speed7delivery
+storeFile=speed7delivery-release.keystore

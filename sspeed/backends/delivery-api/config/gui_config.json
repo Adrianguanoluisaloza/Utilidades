@@ -1,0 +1,47 @@
+{
+  "api": {
+    "base_url": "http://18.217.51.221:7070",
+    "docker_container": "delivery-api"
+  },
+  "aws": {
+    "ec2": {
+      "host": "18.217.51.221",
+      "user": "ubuntu",
+      "pem_path": "C:\\Users\\Adrian\\Videos\\finalidad.pem"
+    },
+    "rds": {
+      "host": "databasefinal.c3o8qkm2u0hm.us-east-2.rds.amazonaws.com",
+      "user": "Michael",
+      "password": "Unidos2025!",
+      "database": "databasefinal",
+      "port": 5432
+    }
+  },
+  "paths": {
+    "project_dir": "c:\\Users\\Adrian\\Proyecto\\sspeed\\backends\\delivery-api",
+    "deploy_script": "c:\\Users\\Adrian\\Proyecto\\sspeed\\backends\\delivery-api\\deploy\\DEPLOY_COMPLETO.bat",
+    "jar_file": "c:\\Users\\Adrian\\Proyecto\\sspeed\\backends\\delivery-api\\target\\delivery-api-1.0-SNAPSHOT-jar-with-dependencies.jar"
+  },
+  "test_users": {
+    "cliente": {
+      "email": "carlos.cliente@example.com",
+      "password": "Cliente123!"
+    },
+    "admin": {
+      "email": "adrian@admin.com",
+      "password": "Admin123!"
+    },
+    "delivery": {
+      "email": "delivery1@example.com",
+      "password": "Delivery123!"
+    },
+    "negocio": {
+      "email": "negocio1@example.com",
+      "password": "Negocio123!"
+    },
+    "soporte": {
+      "email": "soporte@example.com",
+      "password": "Soporte123!"
+    }
+  }
+}

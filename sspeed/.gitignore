@@ -1,0 +1,82 @@
+# Ignorar archivos de build y assets generados
+android/app/build/
+android/app/build/intermediates/
+android/app/build/intermediates/assets/
+android/app/build/intermediates/assets/debug/
+android/app/build/intermediates/assets/debug/mergeDebugAssets/
+android/app/build/intermediates/assets/debug/mergeDebugAssets/flutter_assets/
+android/app/build/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/
+android/app/build/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/images/
+android/app/build/intermediates/assets/debug/mergeDebugAssets/flutter_assets/assets/images/publicidad*mp4
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# EXCEPCIÓN: Permitir carpeta de releases curada
+!/build/release_apks/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Credenciales y configuración sensible
+**/application.properties
+**/application-prod.properties
+**/.env
+**/credentials.json
+**/aws-credentials.txt
+**/database-config.txt
+
+# Documentación con credenciales
+DOCUMENTACION_FINAL/
+CREDENCIALES_AWS.md
+GUIA_DEPLOYMENT.md
+
+# Scripts de deployment
+DEPLOY_*.bat
+SUBIR_*.bat
+deploy_*.py
+**/cargar_sql_rds.py
+
+# Archivos temporales
+*.tmp
+*.bak
+*.backup
+reporte_*.json

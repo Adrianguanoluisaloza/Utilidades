@@ -1,0 +1,9 @@
+REPORTE DE PRUEBAS DE ENDPOINTS
+==================================================
+
+OK     | Health Check                   | 200
+OK     | Listar Productos               | 200
+OK     | Detalle Producto               | 200
+OK     | Pedidos Cliente                | 200
+OK     | Ubicaciones                    | 200
+OK     | Chat Bot IA                    | 201

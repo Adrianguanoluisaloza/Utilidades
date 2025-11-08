@@ -1,0 +1,41 @@
+# Ignore everything by default and selectively include the fat JAR if you copy from target
+
+# VCS and IDE
+.git
+.github
+.gitignore
+.gitattributes
+.idea
+.vscode
+nbproject
+
+# Node / Frontend leftovers
+node_modules
+dist
+build
+
+# Maven/Gradle caches
+.mvn
+**/.mvn/
+**/.gradle/
+
+# Local env and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+
+# Project artifacts not needed in the image
+sql/
+tools/
+README.md
+README_dotenv.txt
+FIXES_APPLIED.md
+PRE_JAR_CHECKLIST.md
+0)
+files_to_compile.txt
+
+# Exclude all targets except the shaded jar (we copy with an explicit path in Dockerfile)
+**/target/*
+!target/*-jar-with-dependencies.jar

@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: delivery-api
+    environment:
+      - PORT=7070
+    env_file:
+      - .env
+    ports:
+      - "7070:7070"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:7070/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

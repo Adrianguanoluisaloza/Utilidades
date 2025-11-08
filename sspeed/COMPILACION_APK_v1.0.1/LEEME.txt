@@ -1,0 +1,76 @@
+# 📦 COMPILACION_APK_v1.0.1
+
+Esta carpeta contiene toda la documentación y archivos necesarios para compilar y firmar la aplicación Speed7Delivery v1.0.1.
+
+## 📁 Contenido de la carpeta
+
+### Documentación
+- **README.md** - Documentación completa del proceso de compilación
+- **GUIA_RAPIDA.md** - Comandos esenciales y solución rápida de problemas
+- **CHANGELOG.md** - Lista detallada de todos los cambios aplicados
+- **CREDENCIALES_FIRMA.md** - ⚠️ CONFIDENCIAL - Información del keystore
+
+### Archivos de configuración
+- **key.properties** - Configuración de firma (contraseñas)
+- **speed7delivery-release.keystore** - Keystore de firma de release
+
+### Scripts
+- **BUILD_APK.bat** - Script automatizado para compilar APK
+
+---
+
+## 🚀 Inicio rápido
+
+### Compilar APK:
+```bash
+# Opción 1: Usar el script automatizado
+BUILD_APK.bat
+
+# Opción 2: Comandos manuales
+cd c:\Users\Adrian\Proyecto\sspeed
+flutter clean
+flutter build apk --release
+```
+
+---
+
+## ⚠️ ADVERTENCIA DE SEGURIDAD
+
+Los siguientes archivos contienen información confidencial:
+- `speed7delivery-release.keystore`
+- `key.properties`
+- `CREDENCIALES_FIRMA.md`
+
+**NO compartir públicamente. NO subir a Git.**
+
+---
+
+## 📖 Lee primero
+
+1. **README.md** - Para entender todo el proceso y problemas resueltos
+2. **GUIA_RAPIDA.md** - Para compilar rápidamente
+3. **CREDENCIALES_FIRMA.md** - Para información de seguridad del keystore
+
+---
+
+## 📊 Información de la versión
+
+- **Versión**: 1.0.1
+- **Build**: 2
+- **Fecha**: 7 de noviembre de 2025
+- **Estado**: ✅ Producción lista
+
+---
+
+## 🔒 Backup
+
+Esta carpeta sirve como backup de:
+- Configuración de firma
+- Keystore de release
+- Documentación del proceso
+
+**Recomendación**: Hacer una copia adicional de esta carpeta en un lugar seguro.
+
+---
+
+© 2025 Speed7Delivery
